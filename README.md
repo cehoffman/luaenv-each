@@ -15,7 +15,7 @@ $ git clone https://github.com/cehoffman/luaenv-each.git
 You can get help for the `each` command by passing the `-h` option.
 
 ```
-$ luaenv each -h
+$ luaenv help each
 Usage: luaenv each [-q] ...
 	-q Don't print header for each version run
 ```
