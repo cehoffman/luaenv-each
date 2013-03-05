@@ -16,8 +16,8 @@ You can get help for the `each` command by passing the `-h` option.
 
 ```
 $ luaenv each -h
-Usage: luaenv each [-v] ...
-       -v Verbose mode. Prints a header for each lua.
+Usage: luaenv each [-q] ...
+	-q Don't print header for each version run
 ```
 
 Verbose mode will print a header for each lua so you can distinguish

@@ -2,7 +2,7 @@
 #
 # Summary: Run a command in each version form `luaenv versions`
 #
-# Usage: luaenv each [-v] ...
+# Usage: luaenv each [-q] ...
 # 	-q Don't print header for each version run
 
 quiet=0
