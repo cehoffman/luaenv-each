@@ -1,39 +1,49 @@
 #!/bin/bash
+#
+# Summary: Run a command in each version form `luaenv versions`
+#
+# Usage: luaenv each [-v] ...
+# 	-q Don't print header for each version run
 
-verbose=0
+quiet=0
 
-function usage() {
-  echo >&2 "Usage: luaenv each [-v] ..."
-  echo >&2 "       -v Verbose mode. Prints a header for each lua."
-}
-while getopts vh option
-do	case "$option" in
-	v)	verbose=1;;
-  h) usage; exit 0;;
-	[?])
-    usage;
-		exit 1;;
-	esac
+for args in "$@"
+do
+  if [ "$args" = "-q" ]; then
+    quiet=1
+    shift
+  fi
 done
-shift $(($OPTIND-1))
 
-failed_rubies=""
+# Provide luaenv completions
+if [ "$1" = "--complete" ]; then
+  [ -z "$2" ] && echo -q && exec luaenv shims --short
+  find . -print | grep -v .git | cut -c 3-
+  exit
+fi
 
-for lua in `luaenv versions --bare`; do
-  if [ $verbose = 1 ]; then
-    echo -e "\033[1;34m[$lua]:\033[0m \033[1;32m$@\033[0m";
-    echo -e "\033[1;34m******************************************************************\033[0m";
+# Only print colors when in a terminal
+function esc() {
+  [ -t 0 ] && echo -e "\033[${1:-0}m"
+}
+
+failed=""
+
+for lua in $(luaenv-versions --bare); do
+  if [ $quiet = 0 ]; then
+    echo "$(esc "1;34")[$lua]:$(esc) $(esc "1;32")$@$(esc)";
+    echo "$(esc "1;34")******************************************************************$(esc)";
   fi
   LUAENV_VERSION=$lua "$@"
-  if [ $verbose = 1 ]; then
+  if [ $quiet = 0 ]; then
     echo
   fi
   if [ $? != 0 ]; then
-    failed_rubies="$failed_rubies $lua"
+    failed="$failed $lua"
   fi
 done
 
-if [ -n "$failed_rubies" ]; then
-  echo -e "\033[1;31mFAILED IN:$failed_rubies\033[0m"
+if [ -n "$failed" ]; then
+  echo -e "$(esc "1;31")FAILED IN:$failed$(esc)"
 fi
 
