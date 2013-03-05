@@ -3,8 +3,8 @@
 verbose=0
 
 function usage() {
-  echo >&2 "Usage: rbenv each [-v] ..."
-  echo >&2 "       -v Verbose mode. Prints a header for each ruby."
+  echo >&2 "Usage: luaenv each [-v] ..."
+  echo >&2 "       -v Verbose mode. Prints a header for each lua."
 }
 while getopts vh option
 do	case "$option" in
@@ -19,17 +19,17 @@ shift $(($OPTIND-1))
 
 failed_rubies=""
 
-for ruby in `rbenv versions --bare`; do
+for lua in `luaenv versions --bare`; do
   if [ $verbose = 1 ]; then
-    echo -e "\033[1;34m[$ruby]:\033[0m \033[1;32m$@\033[0m";
+    echo -e "\033[1;34m[$lua]:\033[0m \033[1;32m$@\033[0m";
     echo -e "\033[1;34m******************************************************************\033[0m";
   fi
-  RBENV_VERSION=$ruby "$@"
+  LUAENV_VERSION=$lua "$@"
   if [ $verbose = 1 ]; then
     echo
   fi
   if [ $? != 0 ]; then
-    failed_rubies="$failed_rubies $ruby"
+    failed_rubies="$failed_rubies $lua"
   fi
 done
 
